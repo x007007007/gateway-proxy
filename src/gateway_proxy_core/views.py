@@ -30,6 +30,7 @@ class ConfigTemplateAPI(views.APIView):
                 'type': v.type_name,
                 'default': v.get_default_value(),
                 'required': v.required,
+                'display_name': v.display_name,
                 'name': v.name,
                 # 'id': v.pk
             }
