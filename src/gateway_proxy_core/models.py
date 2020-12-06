@@ -3,19 +3,28 @@ from django.db import models
 # Create your models here.
 
 
-class ConfigTypeModel(models.Model):
+class ModelNameStrTrainMixin:
+    def __str__(self):
+        return f"<{self.__class__.__name__}({self.pk}):{self.name}>"
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
     name = models.CharField(max_length=254)
     tpl_table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.SET_NULL, null=True)
 
 
-class ConfigTemplateTableModel(models.Model):
+
+class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
     name = models.CharField(max_length=254)
     switch = models.ForeignKey("ConfigTemplateValueModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
     have_sub_config = models.BooleanField(default=True)
 
 
-class ConfigTemplateValueModel(models.Model):
+class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     TYPE_INT = 'i'
     TYPE_FLOAT = 'f'
     TYPE_PERCENTAGE = 'p'
@@ -61,6 +70,7 @@ class ConfigTemplateValueModel(models.Model):
             c='switch',
             bool='bool',
         ).get(self.type, self.type)
+
 
 class ConfigModel(models.Model):
     config_type = models.ForeignKey("ConfigTypeModel", on_delete=models.CASCADE)
