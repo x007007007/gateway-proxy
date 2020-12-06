@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div v-for="i of ConfigItems" :key="i.id">
+  <div class="row fit" >
+    <div class="row fit justify-start wrap" v-for="i of ConfigItems" :key="i.id">
       <q-input
+        class="col-12"
         v-if="i.isInput()"
         filled
         v-model="userInput[i.name]"
@@ -10,6 +11,7 @@
         v-bind:hint="i.displayName"
       />
       <q-toggle
+        class="col-12"
         v-else-if="i.isToggle()"
         v-model="userInput[i.name]"
         v-bind:label="i.displayName"
@@ -19,6 +21,7 @@
         left-label
       />
       <q-select
+        class="row full-width col-12"
         v-else-if="i.isSwitch()"
         v-model="userInput[i.name]"
         v-bind:label="i.displayName"
@@ -27,11 +30,15 @@
         :option-label="(item) => item === null ? 'Null value' : item.name"
         @input="selectOptions"
       />
-      <div v-if="i.isSwitch() && userInput[i.name] && userInput[i.name].have_sub_config" >
-        <DynamicConfigView
-          :config-id="configId"
-          :table-id="userInput[i.name].id"
-        />
+      <div
+        class="row full-width  justify-start"
+        v-if="i.isSwitch() && userInput[i.name] && userInput[i.name].have_sub_config" >
+        <div class="offset-1 col-11">
+          <DynamicConfigView
+            :config-id="configId"
+            :table-id="userInput[i.name].id"
+          />
+        </div>
       </div>
     </div>
   </div>
