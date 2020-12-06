@@ -7,8 +7,14 @@ from .models import ConfigTemplateTableModel, ConfigTemplateValueModel, ConfigTy
 
 @admin.register(ConfigTemplateTableModel)
 class ConfigTemplateTableAdmin(admin.ModelAdmin):
+    search_fields = (
+        'switch__name',
+    )
     list_display = (
         'name',
+        'switch',
+        'order',
+        'have_sub_config'
     )
 
 

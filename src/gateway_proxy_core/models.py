@@ -18,11 +18,16 @@ class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
 
 
 class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
+    ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
     switch = models.ForeignKey("ConfigTemplateValueModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
     have_sub_config = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = (
+            ('ns', 'name', 'switch'),
+        )
 
 class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     TYPE_INT = 'i'
@@ -34,6 +39,7 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     TYPE_BOOL = 'b'
     TYPE_EMAIL = 'e'
     TYPE_SWITCH = 'c'
+    ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
     table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.CASCADE)
@@ -68,7 +74,7 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
             f='float',
             s='string',
             c='switch',
-            bool='bool',
+            b='bool',
         ).get(self.type, self.type)
 
 
