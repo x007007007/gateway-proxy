@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-form>
+    <q-form class="fit q-ma-md q-pa-md">
       <DynamicConfigView :config-id="1" />
     </q-form>
   </q-page>
