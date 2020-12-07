@@ -1,44 +1,41 @@
 <template>
-  <div class="row fit" >
+  <div>
     <div class="row fit justify-start wrap" v-for="i of ConfigItems" :key="i.id">
-      <q-input
-        class="col-12"
-        v-if="i.isInput()"
-        filled
-        v-model="userInput[i.name]"
-        v-bind:aria-required="i.isRequired()"
-        v-bind:label="i.displayName"
-        v-bind:hint="i.displayName"
-      />
-      <q-toggle
-        class="col-12"
-        v-else-if="i.isToggle()"
-        v-model="userInput[i.name]"
-        v-bind:label="i.displayName"
-        v-bind:aria-required="i.isRequired()"
-        v-bind:hint="i.displayName"
-        color="yellow"
-        left-label
-      />
-      <q-select
-        class="row full-width col-12"
-        v-else-if="i.isSwitch()"
-        v-model="userInput[i.name]"
-        v-bind:label="i.displayName"
-        v-bind:hint="i.displayName"
-        :options="i.options"
-        :option-label="(item) => item === null ? 'Null value' : item.name"
-        @input="selectOptions"
-      />
+      <div class="col-12">
+        <q-input
+          v-if="i.isInput()"
+          filled
+          v-model="userInput[i.name]"
+          v-bind:aria-required="i.isRequired()"
+          v-bind:label="i.displayName"
+          v-bind:hint="i.displayName"
+        />
+        <q-toggle
+          v-else-if="i.isToggle()"
+          v-model="userInput[i.name]"
+          v-bind:label="i.displayName"
+          v-bind:aria-required="i.isRequired()"
+          v-bind:hint="i.displayName"
+          color="yellow"
+          left-label
+        />
+        <q-select
+          v-else-if="i.isSwitch()"
+          v-model="userInput[i.name]"
+          v-bind:label="i.displayName"
+          v-bind:hint="i.displayName"
+          :options="i.options"
+          :option-label="(item) => item === null ? 'Null value' : item.name"
+          @input="selectOptions"
+        />
+      </div>
       <div
-        class="row full-width  justify-start"
+        class="offset-1 col-11"
         v-if="i.isSwitch() && userInput[i.name] && userInput[i.name].have_sub_config" >
-        <div class="offset-1 col-11">
-          <DynamicConfigView
-            :config-id="configId"
-            :table-id="userInput[i.name].id"
-          />
-        </div>
+        <DynamicConfigView
+          :config-id="configId"
+          :table-id="userInput[i.name].id"
+        />
       </div>
     </div>
   </div>
