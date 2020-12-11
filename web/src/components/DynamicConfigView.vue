@@ -97,6 +97,7 @@ class InputData {
 
 export default {
   name: 'DynamicConfigView',
+  emits: ['update:modelValue'],
   data: function () {
     return {
       ConfigItems: [
@@ -106,6 +107,7 @@ export default {
     }
   },
   props: {
+    modelValue: Object, // previously was `value: String`
     configId: {
       type: Number,
       required: true
