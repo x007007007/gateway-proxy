@@ -11,10 +11,10 @@ module.exports = cfg => {
     //   formatter: require('eslint').CLIEngine.getFormatter('stylish')
     // }
   })
-  cfg.module.rules.push({
-    test: /\.s(c|a)ss$/,
-    use: ['css-loader', 'sass-loader'],
-    include: path.resolve(__dirname, '../'),
-  })
+  // cfg.module.rules.push({
+  //   test: /\.s(c|a)ss$/,
+  //   use: ['css-loader', 'sass-loader'],
+  //   include: path.resolve(__dirname, '../'),
+  // })
   return cfg
 }
