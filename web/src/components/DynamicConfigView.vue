@@ -1,18 +1,19 @@
 <template>
   <div>
+    {{ inputData }}: {{ propTableId }}
     <div class="row fit justify-start wrap" v-for="i of ConfigItems" :key="i.id">
       <div class="col-12">
         <q-input
           v-if="i.isInput()"
           filled
-          v-model="userInput[i.name]"
+          v-model="componentModels[i.name]"
           v-bind:aria-required="i.isRequired()"
           v-bind:label="i.displayName"
           v-bind:hint="i.displayName"
         />
         <q-toggle
           v-else-if="i.isToggle()"
-          v-model="userInput[i.name]"
+          v-model="componentModels[i.name]"
           v-bind:label="i.displayName"
           v-bind:aria-required="i.isRequired()"
           v-bind:hint="i.displayName"
@@ -21,20 +22,20 @@
         />
         <q-select
           v-else-if="i.isSwitch()"
-          v-model="userInput[i.name]"
+          v-model="componentModels[i.name]"
           v-bind:label="i.displayName"
           v-bind:hint="i.displayName"
           :options="i.options"
           :option-label="(item) => item === null ? 'Null value' : item.name"
-          @input="selectOptions"
         />
       </div>
       <div
         class="offset-1 col-11"
-        v-if="i.isSwitch() && userInput[i.name] && userInput[i.name].have_sub_config" >
+        v-if="i.isSwitch() && componentModels[i.name] && componentModels[i.name].have_sub_config" >
         <DynamicConfigView
-          :config-id="configId"
-          :table-id="userInput[i.name].id"
+          v-model="subRes[i.name]"
+          :config-id="propConfigId"
+          :table-id="componentModels[i.name].id"
         />
       </div>
     </div>
@@ -42,70 +43,17 @@
 </template>
 
 <script>
-class InputData {
-  constructor (data) {
-    this.data = data
-    console.log(data)
-  }
-
-  get name () {
-    return this.data.name
-  }
-
-  get options () {
-    return this.data.switch
-  }
-
-  get displayName () {
-    return this.data.display_name
-  }
-
-  get type () {
-    console.log('hi')
-    return {
-      string: 'String',
-      int: 'Integer',
-      float: 'Number'
-    }[this.data.type]
-  }
-
-  get id () {
-    return this.data.id
-  }
-
-  isInput () {
-    for (const i of ['string', 'float', 'int']) {
-      if (this.data.type === i) {
-        return true
-      }
-    }
-    return false
-  }
-
-  isToggle () {
-    return this.data.type === 'bool'
-  }
-
-  isRequired () {
-    return this.data.required
-  }
-
-  isSwitch () {
-    return this.data.type === 'switch'
-  }
-}
+import { InputData } from './help'
 
 export default {
   name: 'DynamicConfigView',
-  data: function () {
-    return {
-      ConfigItems: [
-
-      ],
-      userInput: {}
-    }
-  },
   props: {
+    value: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
     configId: {
       type: Number,
       required: true
@@ -115,13 +63,46 @@ export default {
       required: false
     }
   },
+  data: function () {
+    return {
+      subRes: {},
+      componentModels: {},
+      ConfigItems: []
+    }
+  },
+  computed: {
+    propConfigId () {
+      return this.configId
+    },
+    propTableId () {
+      this.refresh()
+      return this.tableId
+    },
+    inputData () {
+      const res = {}
+      Object.entries(this.componentModels).forEach(([k, v]) => {
+        res[k] = v
+      })
+      Object.entries(this.subRes).forEach(([k, v]) => {
+        res[k] = {
+          id: res[k],
+          sub: v
+        }
+      })
+      console.log`inputRes ${JSON.stringify(res)}`
+      return res
+    }
+  },
   watch: {
-    $props: {
+    componentModels: {
       handler () {
-        this.refresh()
+        this.popupModel()
       },
       deep: true,
       immediate: true
+    },
+    value () {
+      console.log(`value change ${arguments}`)
     }
   },
   methods: {
@@ -138,15 +119,12 @@ export default {
       console.log(res)
       this.ConfigItems = res
     },
-    selectOptions () {
-      console.log('hello world', arguments)
-    },
     refresh () {
-      this.GetList().then(
-        function () {
-          console.log(arguments)
-        }
-      )
+      this.GetList()
+    },
+    popupModel () {
+      console.log`emit`
+      this.$emit('input', this.inputData)
     }
   },
   created () {
