@@ -1,7 +1,8 @@
 <template>
   <q-page class="flex flex-center">
     <q-form class="fit q-ma-md q-pa-md">
-      <DynamicConfigView :config-id="1" />
+     res {{ res }}
+      <DynamicConfigView :config-id="1" v-model="res" />
     </q-form>
   </q-page>
 </template>
@@ -12,6 +13,11 @@ export default {
   name: 'PageIndex',
   components: {
     DynamicConfigView
+  },
+  data () {
+    return {
+      res: {}
+    }
   }
 }
 </script>

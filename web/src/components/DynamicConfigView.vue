@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ inputData }}: {{ propTableId }}
     <div class="row fit justify-start wrap" v-for="i of ConfigItems" :key="i.id">
       <div class="col-12">
         <q-input
@@ -28,13 +27,15 @@
           :options="i.options"
           :option-label="(item) => item === null ? 'Null value' : item.name"
         />
+        {{ componentModels[i.name] }}
+
       </div>
       <div
         class="offset-1 col-11"
         v-if="i.isSwitch() && componentModels[i.name] && componentModels[i.name].have_sub_config" >
         <DynamicConfigView
           v-model="subRes[i.name]"
-          :config-id="propConfigId"
+          :config-id="configId"
           :table-id="componentModels[i.name].id"
         />
       </div>
@@ -70,30 +71,14 @@ export default {
       ConfigItems: []
     }
   },
-  computed: {
-    propConfigId () {
-      return this.configId
-    },
-    propTableId () {
-      this.refresh()
-      return this.tableId
-    },
-    inputData () {
-      const res = {}
-      Object.entries(this.componentModels).forEach(([k, v]) => {
-        res[k] = v
-      })
-      Object.entries(this.subRes).forEach(([k, v]) => {
-        res[k] = {
-          id: res[k],
-          sub: v
-        }
-      })
-      console.log`inputRes ${JSON.stringify(res)}`
-      return res
-    }
-  },
   watch: {
+    subRes: {
+      handler () {
+        this.popupModel()
+      },
+      deep: true,
+      immediate: true
+    },
     componentModels: {
       handler () {
         this.popupModel()
@@ -101,8 +86,8 @@ export default {
       deep: true,
       immediate: true
     },
-    value () {
-      console.log(`value change ${arguments}`)
+    tableId () {
+      this.refresh()
     }
   },
   methods: {
@@ -123,8 +108,19 @@ export default {
       this.GetList()
     },
     popupModel () {
-      console.log`emit`
-      this.$emit('input', this.inputData)
+      // 向上传播 model 数据结构
+      const res = {}
+      Object.entries(this.componentModels).forEach(([k, v]) => {
+        res[k] = v
+      })
+      Object.entries(this.subRes).forEach(([k, v]) => {
+        res[k] = {
+          id: res[k],
+          sub: v
+        }
+      })
+      this.$emit('input', res)
+      return res
     }
   },
   created () {
