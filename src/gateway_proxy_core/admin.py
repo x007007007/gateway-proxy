@@ -2,10 +2,10 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import ConfigTemplateTableModel, ConfigTemplateValueModel, ConfigTypeModel
+from .models import ConfigStructSchemaGroupModel, ConfigStructSchemaItemModel, ConfigTypeModel
 
 
-@admin.register(ConfigTemplateTableModel)
+@admin.register(ConfigStructSchemaGroupModel)
 class ConfigTemplateTableAdmin(admin.ModelAdmin):
     search_fields = (
         'switch__name',
@@ -18,7 +18,7 @@ class ConfigTemplateTableAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ConfigTemplateValueModel)
+@admin.register(ConfigStructSchemaItemModel)
 class ConfigTemplateValueAdmin(admin.ModelAdmin):
     list_display = (
         'name',

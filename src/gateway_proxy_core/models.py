@@ -13,13 +13,13 @@ class ModelNameStrTrainMixin:
 
 class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
     name = models.CharField(max_length=254)
-    tpl_table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.SET_NULL, null=True)
+    tpl_table = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.SET_NULL, null=True)
 
 
-class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
+class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
     ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
-    switch = models.ForeignKey("ConfigTemplateValueModel", null=True, blank=True, on_delete=models.SET_NULL)
+    switch = models.ForeignKey("ConfigStructSchemaItemModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
     have_sub_config = models.BooleanField(default=True)
 
@@ -29,7 +29,7 @@ class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
         )
 
 
-class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
+class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
     TYPE_INT = 'i'
     TYPE_FLOAT = 'f'
     TYPE_PERCENTAGE = 'p'
@@ -42,7 +42,7 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
-    table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.CASCADE)
+    table = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
     display_name = models.CharField(max_length=254)
     required = models.BooleanField()
     type = models.CharField(max_length=1, choices=(
