@@ -19,6 +19,10 @@ class ConfigStructSchemaNamespaceModel(models.Model):
         return "/".join(p[::-1])
 
 
+class ConfigStructSchemaDataTypeModel(ModelNameStrTrainMixin, models.Model):
+    name = models.CharField(max_length=254)
+
+
 class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
     ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
@@ -47,6 +51,7 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
     group = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
+    data_type = models.ForeignKey("ConfigStructSchemaDataTypeModel", null=True, blank=True, on_delete=models.SET_NULL)
     display_name = models.CharField(max_length=254)
     required = models.BooleanField()
     type = models.CharField(max_length=1, choices=(
