@@ -8,7 +8,7 @@ class ConfigStructSchemaNamespaceModel(models.Model):
     parent = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        self.path()
+        return self.path()
 
     def path(self) -> str:
         c = self
