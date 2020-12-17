@@ -4,7 +4,7 @@ from rest_framework import views, request as d_request, response
 from gateway_proxy_core.models import ConfigTypeModel, ConfigTemplateTableModel, ConfigTemplateValueModel
 
 
-class ConfigTemplateAPI(views.APIView):
+class ConfigSchemaAPI(views.APIView):
 
     def get_parent(self, request, ct_pk):
         config_type = ConfigTypeModel.objects.get(pk=ct_pk)
