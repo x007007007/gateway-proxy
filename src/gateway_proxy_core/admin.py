@@ -19,11 +19,13 @@ class ConfigStructSchemaNamespaceAdmin(admin.ModelAdmin):
 
 
 @admin.register(ConfigStructSchemaGroupModel)
-class ConfigTemplateTableAdmin(admin.ModelAdmin):
+class ConfigStructSchemaGroupAdmin(admin.ModelAdmin):
     search_fields = (
         'switch__name',
     )
     list_display = (
+        'pk',
+        'ns',
         'name',
         'switch',
         'order',
@@ -32,8 +34,10 @@ class ConfigTemplateTableAdmin(admin.ModelAdmin):
 
 
 @admin.register(ConfigStructSchemaItemModel)
-class ConfigTemplateValueAdmin(admin.ModelAdmin):
+class ConfigStructSchemaItemAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
+        'ns',
         'name',
         'display_name',
         'table',
