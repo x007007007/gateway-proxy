@@ -1,19 +1,6 @@
 from django.db import models
 
-# Create your models here.
-
-
-class ModelNameStrTrainMixin:
-    def __str__(self):
-        return f"<{self.__class__.__name__}({self.pk}):{self.name}>"
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
-    name = models.CharField(max_length=254)
-    tpl_table = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.SET_NULL, null=True)
+from gateway_proxy_core.models._mixin import ModelNameStrTrainMixin
 
 
 class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
@@ -76,8 +63,3 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
             c='switch',
             b='bool',
         ).get(self.type, self.type)
-
-
-class ConfigModel(models.Model):
-    config_type = models.ForeignKey("ConfigTypeModel", on_delete=models.CASCADE)
-    user_config = models.JSONField()
