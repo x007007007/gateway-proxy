@@ -16,7 +16,6 @@ class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
     tpl_table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.SET_NULL, null=True)
 
 
-
 class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
     ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
@@ -28,6 +27,7 @@ class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
         unique_together = (
             ('ns', 'name', 'switch'),
         )
+
 
 class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     TYPE_INT = 'i'

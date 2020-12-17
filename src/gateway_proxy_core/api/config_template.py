@@ -1,16 +1,8 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import (
-    views,
-    generics,
-    request as d_request,
-    response
-)
-from .models import (
-    ConfigTypeModel,
-    ConfigTemplateTableModel,
-    ConfigTemplateValueModel,
-    ConfigModel
-)
+from rest_framework import views, request as d_request, response
+
+from gateway_proxy_core.models import ConfigTypeModel, ConfigTemplateTableModel, ConfigTemplateValueModel
+
 
 class ConfigTemplateAPI(views.APIView):
 
