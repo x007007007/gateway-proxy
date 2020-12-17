@@ -25,6 +25,15 @@ export class InputData {
     }[this.data.type]
   }
 
+  get componentName () {
+    return {
+      string: "q-input",
+      int: "q-input",
+      bool: "q-toggle"
+
+    }[this.data.type]
+  }
+
   get id () {
     return this.data.id
   }
