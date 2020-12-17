@@ -20,7 +20,8 @@ class ConfigStructSchemaNamespaceModel(models.Model):
 
 
 class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
-    ns = models.CharField(max_length=254, null=True, blank=True)
+    ns_old = models.CharField(max_length=254, null=True, blank=True)
+    ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
     switch = models.ForeignKey("ConfigStructSchemaItemModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
@@ -28,7 +29,7 @@ class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
 
     class Meta:
         unique_together = (
-            ('ns', 'name', 'switch'),
+            ('ns_old', 'name', 'switch'),
         )
 
 
@@ -42,7 +43,8 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
     TYPE_BOOL = 'b'
     TYPE_EMAIL = 'e'
     TYPE_SWITCH = 'c'
-    ns = models.CharField(max_length=254, null=True, blank=True)
+    ns_old = models.CharField(max_length=254, null=True, blank=True)
+    ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
     table = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
