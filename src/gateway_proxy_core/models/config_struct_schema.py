@@ -3,6 +3,19 @@ from django.db import models
 from gateway_proxy_core.models._mixin import ModelNameStrTrainMixin
 
 
+class ConfigStructSchemaNamespace(models.Model):
+    name = models.CharField(max_length=254)
+    parent = models.ForeignKey("ConfigStructSchemaNamespace", null=True, blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        c = self
+        p = []
+        while c is not None:
+            p.append(c.name)
+            c = c.parent
+        return "/".join(p[::-1])
+
+
 class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
     ns = models.CharField(max_length=254, null=True, blank=True)
     name = models.CharField(max_length=254)
