@@ -58,6 +58,8 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
         (TYPE_SWITCH, TYPE_SWITCH),
     ))
     default_value = models.CharField(max_length=254, null=True, blank=True)
+    component = models.ForeignKey("ConfigComponentModel", null=True, blank=True, on_delete=models.SET_NULL)
+    validator = models.ForeignKey("ConfigValidatorModel", null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         unique_together = (

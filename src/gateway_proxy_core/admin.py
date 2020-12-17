@@ -7,7 +7,25 @@ from .models import (
     ConfigStructSchemaItemModel,
     ConfigTypeModel,
     ConfigStructSchemaNamespaceModel,
+    ConfigComponentModel,
+    ConfigValidatorModel,
 )
+
+
+@admin.register(ConfigComponentModel)
+class ConfigComponentAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+    )
+
+
+@admin.register(ConfigValidatorModel)
+class ConfigValidatorAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+    )
 
 @admin.register(ConfigStructSchemaNamespaceModel)
 class ConfigStructSchemaNamespaceAdmin(admin.ModelAdmin):

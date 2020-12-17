@@ -5,3 +5,5 @@ from .config_struct_schema import (
     ConfigStructSchemaNamespaceModel,
 )
 from .config import ConfigModel
+from .config_style import ConfigComponentModel
+from .config_validator import ConfigValidatorModel
