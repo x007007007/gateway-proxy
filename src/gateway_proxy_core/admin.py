@@ -2,7 +2,20 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import ConfigStructSchemaGroupModel, ConfigStructSchemaItemModel, ConfigTypeModel
+from .models import (
+    ConfigStructSchemaGroupModel,
+    ConfigStructSchemaItemModel,
+    ConfigTypeModel,
+    ConfigStructSchemaNamespaceModel,
+)
+
+@admin.register(ConfigStructSchemaNamespaceModel)
+class ConfigStructSchemaNamespaceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'path'
+    )
 
 
 @admin.register(ConfigStructSchemaGroupModel)

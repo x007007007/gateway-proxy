@@ -3,11 +3,14 @@ from django.db import models
 from gateway_proxy_core.models._mixin import ModelNameStrTrainMixin
 
 
-class ConfigStructSchemaNamespace(models.Model):
+class ConfigStructSchemaNamespaceModel(models.Model):
     name = models.CharField(max_length=254)
-    parent = models.ForeignKey("ConfigStructSchemaNamespace", null=True, blank=True, on_delete=models.CASCADE)
+    parent = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
+        self.path()
+
+    def path(self) -> str:
         c = self
         p = []
         while c is not None:
