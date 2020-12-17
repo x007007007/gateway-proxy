@@ -20,16 +20,15 @@ class ConfigStructSchemaNamespaceModel(models.Model):
 
 
 class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
-    ns_old = models.CharField(max_length=254, null=True, blank=True)
     ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
-    switch = models.ForeignKey("ConfigStructSchemaItemModel", null=True, blank=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey("ConfigStructSchemaItemModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
     have_sub_config = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (
-            ('ns_old', 'name', 'switch'),
+            ('ns', 'name', 'item'),
         )
 
 
@@ -43,11 +42,11 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
     TYPE_BOOL = 'b'
     TYPE_EMAIL = 'e'
     TYPE_SWITCH = 'c'
-    ns_old = models.CharField(max_length=254, null=True, blank=True)
+
     ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
-    table = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
+    group = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
     display_name = models.CharField(max_length=254)
     required = models.BooleanField()
     type = models.CharField(max_length=1, choices=(
@@ -59,6 +58,11 @@ class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
         (TYPE_SWITCH, TYPE_SWITCH),
     ))
     default_value = models.CharField(max_length=254, null=True, blank=True)
+
+    class Meta:
+        unique_together = (
+            ('ns', 'name', 'group'),
+        )
 
     def get_default_value(self):
         if self.type == self.TYPE_INT:

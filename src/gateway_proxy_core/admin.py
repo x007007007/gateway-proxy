@@ -21,13 +21,13 @@ class ConfigStructSchemaNamespaceAdmin(admin.ModelAdmin):
 @admin.register(ConfigStructSchemaGroupModel)
 class ConfigStructSchemaGroupAdmin(admin.ModelAdmin):
     search_fields = (
-        'switch__name',
+        'item__name',
     )
     list_display = (
         'pk',
         'ns',
         'name',
-        'switch',
+        'item',
         'order',
         'have_sub_config'
     )
@@ -40,7 +40,7 @@ class ConfigStructSchemaItemAdmin(admin.ModelAdmin):
         'ns',
         'name',
         'display_name',
-        'table',
+        'group',
         'required',
         'type',
         'default_value',
