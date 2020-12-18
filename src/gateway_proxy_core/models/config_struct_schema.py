@@ -1,35 +1,42 @@
 from django.db import models
 
-# Create your models here.
+from gateway_proxy_core.models._mixin import ModelNameStrTrainMixin
 
 
-class ModelNameStrTrainMixin:
+class ConfigStructSchemaNamespaceModel(models.Model):
+    name = models.CharField(max_length=254)
+    parent = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
+
     def __str__(self):
-        return f"<{self.__class__.__name__}({self.pk}):{self.name}>"
+        return self.path()
 
-    def __repr__(self):
-        return self.__str__()
+    def path(self) -> str:
+        c = self
+        p = []
+        while c is not None:
+            p.append(c.name)
+            c = c.parent
+        return "/".join(p[::-1])
 
 
-class ConfigTypeModel(ModelNameStrTrainMixin, models.Model):
+class ConfigStructSchemaDataTypeModel(ModelNameStrTrainMixin, models.Model):
     name = models.CharField(max_length=254)
-    tpl_table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.SET_NULL, null=True)
 
 
-
-class ConfigTemplateTableModel(ModelNameStrTrainMixin, models.Model):
-    ns = models.CharField(max_length=254, null=True, blank=True)
+class ConfigStructSchemaGroupModel(ModelNameStrTrainMixin, models.Model):
+    ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
-    switch = models.ForeignKey("ConfigTemplateValueModel", null=True, blank=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey("ConfigStructSchemaItemModel", null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
     have_sub_config = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (
-            ('ns', 'name', 'switch'),
+            ('ns', 'name', 'item'),
         )
 
-class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
+
+class ConfigStructSchemaItemModel(ModelNameStrTrainMixin, models.Model):
     TYPE_INT = 'i'
     TYPE_FLOAT = 'f'
     TYPE_PERCENTAGE = 'p'
@@ -39,10 +46,12 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
     TYPE_BOOL = 'b'
     TYPE_EMAIL = 'e'
     TYPE_SWITCH = 'c'
-    ns = models.CharField(max_length=254, null=True, blank=True)
+
+    ns = models.ForeignKey("ConfigStructSchemaNamespaceModel", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=254)
     order = models.IntegerField(default=0)
-    table = models.ForeignKey("ConfigTemplateTableModel", on_delete=models.CASCADE)
+    group = models.ForeignKey("ConfigStructSchemaGroupModel", on_delete=models.CASCADE)
+    data_type = models.ForeignKey("ConfigStructSchemaDataTypeModel", null=True, blank=True, on_delete=models.SET_NULL)
     display_name = models.CharField(max_length=254)
     required = models.BooleanField()
     type = models.CharField(max_length=1, choices=(
@@ -54,6 +63,13 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
         (TYPE_SWITCH, TYPE_SWITCH),
     ))
     default_value = models.CharField(max_length=254, null=True, blank=True)
+    component = models.ForeignKey("ConfigComponentModel", null=True, blank=True, on_delete=models.SET_NULL)
+    validator = models.ForeignKey("ConfigValidatorModel", null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        unique_together = (
+            ('ns', 'name', 'group'),
+        )
 
     def get_default_value(self):
         if self.type == self.TYPE_INT:
@@ -76,8 +92,3 @@ class ConfigTemplateValueModel(ModelNameStrTrainMixin, models.Model):
             c='switch',
             b='bool',
         ).get(self.type, self.type)
-
-
-class ConfigModel(models.Model):
-    config_type = models.ForeignKey("ConfigTypeModel", on_delete=models.CASCADE)
-    user_config = models.JSONField()

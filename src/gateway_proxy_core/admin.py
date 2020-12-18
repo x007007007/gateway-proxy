@@ -2,28 +2,63 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import ConfigTemplateTableModel, ConfigTemplateValueModel, ConfigTypeModel
+from .models import (
+    ConfigStructSchemaGroupModel,
+    ConfigStructSchemaItemModel,
+    ConfigTypeModel,
+    ConfigStructSchemaNamespaceModel,
+    ConfigComponentModel,
+    ConfigValidatorModel,
+)
 
 
-@admin.register(ConfigTemplateTableModel)
-class ConfigTemplateTableAdmin(admin.ModelAdmin):
+@admin.register(ConfigComponentModel)
+class ConfigComponentAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+    )
+
+
+@admin.register(ConfigValidatorModel)
+class ConfigValidatorAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+    )
+
+@admin.register(ConfigStructSchemaNamespaceModel)
+class ConfigStructSchemaNamespaceAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'path'
+    )
+
+
+@admin.register(ConfigStructSchemaGroupModel)
+class ConfigStructSchemaGroupAdmin(admin.ModelAdmin):
     search_fields = (
-        'switch__name',
+        'item__name',
     )
     list_display = (
+        'pk',
+        'ns',
         'name',
-        'switch',
+        'item',
         'order',
         'have_sub_config'
     )
 
 
-@admin.register(ConfigTemplateValueModel)
-class ConfigTemplateValueAdmin(admin.ModelAdmin):
+@admin.register(ConfigStructSchemaItemModel)
+class ConfigStructSchemaItemAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
+        'ns',
         'name',
         'display_name',
-        'table',
+        'group',
         'required',
         'type',
         'default_value',
