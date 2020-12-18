@@ -69,5 +69,5 @@ class ConfigStructSchemaItemAdmin(admin.ModelAdmin):
 class ConfigTypeAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'tpl_table',
+        'tpl_schema',
     )

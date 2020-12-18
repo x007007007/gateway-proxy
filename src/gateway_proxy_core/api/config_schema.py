@@ -12,12 +12,12 @@ class ConfigSchemaAPI(views.APIView):
 
     def get(self, request: d_request.Request, *args, **kwargs):
         parent = self.get_parent(request, *args, **kwargs)  # type: ConfigTypeModel
-        tpl_table = parent.tpl_table
+        tpl_schema = parent.tpl_schema
         if tpl_id := request.query_params.get('id', None):
-            tpl_table = get_object_or_404(ConfigStructSchemaGroupModel, pk=tpl_id)  # type: ConfigStructSchemaGroupModel
-            print(tpl_table)
+            tpl_schema = get_object_or_404(ConfigStructSchemaGroupModel, pk=tpl_id)  # type: ConfigStructSchemaGroupModel
+            print(tpl_schema)
         res = []
-        for v in ConfigStructSchemaItemModel.objects.filter(table=tpl_table).order_by('order'):  # type:ConfigStructSchemaItemModel
+        for v in ConfigStructSchemaItemModel.objects.filter(group=tpl_schema).order_by('order'):  # type:ConfigStructSchemaItemModel
             d = {
                 'type': v.type_name,
                 'default': v.get_default_value(),
@@ -27,8 +27,8 @@ class ConfigSchemaAPI(views.APIView):
                 # 'id': v.pk
             }
             if v.type == v.TYPE_SWITCH:
-                d['switch'] = ConfigStructSchemaGroupModel.objects.filter(
-                    switch=v
+                d['items'] = ConfigStructSchemaGroupModel.objects.filter(
+                    item=v
                 ).order_by('order').values("id", "name", 'have_sub_config')
             res.append(d)
         return response.Response(res)
