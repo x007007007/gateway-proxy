@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     async GetList ({ configId, tableId }) {
-      const resp = await this.$axios.get(`/api/config/type/${configId}/table/`, {
+      const resp = await this.$axios.get(`/api/config/type/${configId}/schema/`, {
         params: {
           id: tableId
         }
