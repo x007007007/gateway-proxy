@@ -1,7 +1,6 @@
 export class InputData {
   constructor (data) {
     this.data = data
-    console.log(data)
   }
 
   get name () {
@@ -9,7 +8,7 @@ export class InputData {
   }
 
   get options () {
-    return this.data.switch
+    return this.data.items
   }
 
   get displayName () {

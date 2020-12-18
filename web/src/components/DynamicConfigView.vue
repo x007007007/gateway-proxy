@@ -72,7 +72,7 @@ export default {
       return this.configItems
     }
   },
-  data: function () {
+  data () {
     const init = {
       subGroupCompModelMap: {},
       subGroupConfCompListMap: {}, // api callback成功后创建
@@ -80,10 +80,10 @@ export default {
       subCompModelMap: {}
     }
     for (const item of this.configItems) {
-      if (item.isSwitch()) { // 是子组
+      if (item.isSwitch() && this.value && this.value[item.name]) { // 是子组
         init.subGroupCompModelMap[item.name] = this.value[item.name].sub
         init.subGroupSelectedIdMap[item.name] = this.value[item.name].id
-        if (this.value[item.name] && this.value[item.name].id) {
+        if (this.value[item.name].id) {
           this.GetList({ configId: this.configId, tableId: init.subGroupSelectedIdMap[item.name].id }).then((res) => {
             Vue.set(this.subGroupConfCompListMap, item.name, res)
           })
@@ -92,6 +92,7 @@ export default {
         init.subCompModelMap[item.name] = this.value[item.name]
       }
     }
+
     return init
   },
   watch: {
