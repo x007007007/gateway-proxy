@@ -5,14 +5,14 @@
         <q-input
           v-if="i.isInput()"
           filled
-          v-model="subCompModelMap[i.name]"
+          v-model="compModelMap[i.name]"
           v-bind:aria-required="i.isRequired()"
           v-bind:label="i.displayName"
           v-bind:hint="i.displayName"
         />
         <q-toggle
           v-else-if="i.isToggle()"
-          v-model="subCompModelMap[i.name]"
+          v-model="compModelMap[i.name]"
           v-bind:label="i.displayName"
           v-bind:aria-required="i.isRequired()"
           v-bind:hint="i.displayName"
@@ -77,7 +77,7 @@ export default {
       subGroupCompModelMap: {},
       subGroupConfCompListMap: {}, // api callback成功后创建
       subGroupSelectedIdMap: {},
-      subCompModelMap: {}
+      compModelMap: {}
     }
     for (const item of this.configItems) {
       if (item.isSwitch() && this.value && this.value[item.name]) { // 是子组
@@ -89,7 +89,7 @@ export default {
           })
         }
       } else {
-        init.subCompModelMap[item.name] = this.value[item.name]
+        init.compModelMap[item.name] = this.value[item.name]
       }
     }
 
@@ -103,7 +103,7 @@ export default {
       deep: true,
       immediate: false
     },
-    subCompModelMap: {
+    compModelMap: {
       handler () {
         this.popupModel()
       },
@@ -131,16 +131,16 @@ export default {
       })
     },
     async updateSubGroupCompMap (subGroupSelectedMap) {
-      for (const itemName in subGroupSelectedMap) {
+      for (const itemName in subGroupSelectedMap) { // 选项名
         const res = await this.GetList({ configId: this.configId, tableId: subGroupSelectedMap[itemName].id })
         Vue.set(this.subGroupConfCompListMap, itemName, res)
-        this.subGroupCompModelMap[itemName] = {}
+        // Vue.set(this.subGroupCompModelMap, itemName, {})
       }
     },
     popupModel () {
       // 向上传播 model 数据结构
       const res = {}
-      Object.entries(this.subCompModelMap).forEach(([k, v]) => {
+      Object.entries(this.compModelMap).forEach(([k, v]) => {
         res[k] = v
       })
       Object.entries(this.subGroupSelectedIdMap).forEach(([k, v]) => {
